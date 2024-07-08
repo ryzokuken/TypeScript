@@ -536,6 +536,7 @@ function createImportAdderWorker(sourceFile: SourceFile | FutureSourceFile, prog
                         declaration.importClause!.isTypeOnly,
                         declaration.importClause!.name,
                         /*namedBindings*/ undefined,
+                        /*phase*/ undefined,
                     ),
                 );
             }
@@ -636,6 +637,7 @@ function createImportAdderWorker(sourceFile: SourceFile | FutureSourceFile, prog
                                     (d.importClause.namedBindings as NamedImports).elements.filter(e => verbatimImports.has(e)),
                                 )
                                 : undefined,
+                            /*phase*/ undefined,
                         ),
                         d.moduleSpecifier,
                         d.attributes,
@@ -1988,6 +1990,7 @@ function getNewImports(
                     shouldUseTypeOnly(namespaceLikeImport, preferences),
                     /*name*/ undefined,
                     factory.createNamespaceImport(factory.createIdentifier(namespaceLikeImport.name)),
+                    /*phase*/ undefined,
                 ),
                 quotedModuleSpecifier,
                 /*attributes*/ undefined,

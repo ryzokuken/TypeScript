@@ -135,6 +135,7 @@ import {
     ImportClause,
     ImportDeclaration,
     ImportEqualsDeclaration,
+    ImportPhaseSyntaxKind,
     ImportSpecifier,
     ImportTypeAssertionContainer,
     ImportTypeNode,
@@ -4715,11 +4716,12 @@ export function createNodeFactory(flags: NodeFactoryFlags, baseFactory: BaseNode
     }
 
     // @api
-    function createImportClause(isTypeOnly: boolean, name: Identifier | undefined, namedBindings: NamedImportBindings | undefined): ImportClause {
+    function createImportClause(isTypeOnly: boolean, name: Identifier | undefined, namedBindings: NamedImportBindings | undefined, phase: ImportPhaseSyntaxKind | undefined): ImportClause {
         const node = createBaseDeclaration<ImportClause>(SyntaxKind.ImportClause);
         node.isTypeOnly = isTypeOnly;
         node.name = name;
         node.namedBindings = namedBindings;
+        node.phase = phase;
         node.transformFlags |= propagateChildFlags(node.name) |
             propagateChildFlags(node.namedBindings);
         if (isTypeOnly) {
@@ -4730,11 +4732,12 @@ export function createNodeFactory(flags: NodeFactoryFlags, baseFactory: BaseNode
     }
 
     // @api
-    function updateImportClause(node: ImportClause, isTypeOnly: boolean, name: Identifier | undefined, namedBindings: NamedImportBindings | undefined) {
+    function updateImportClause(node: ImportClause, isTypeOnly: boolean, name: Identifier | undefined, namedBindings: NamedImportBindings | undefined, phase: ImportPhaseSyntaxKind | undefined) {
         return node.isTypeOnly !== isTypeOnly
                 || node.name !== name
                 || node.namedBindings !== namedBindings
-            ? update(createImportClause(isTypeOnly, name, namedBindings), node)
+                || node.phase !== phase
+            ? update(createImportClause(isTypeOnly, name, namedBindings, phase), node)
             : node;
     }
 

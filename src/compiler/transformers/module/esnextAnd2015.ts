@@ -161,6 +161,7 @@ export function transformECMAScriptModule(context: TransformationContext): (x: S
                     factory.createNamedImports([
                         factory.createImportSpecifier(/*isTypeOnly*/ false, factory.createIdentifier("createRequire"), createRequireName),
                     ]),
+                    /*phase*/ undefined,
                 ),
                 factory.createStringLiteral("module"),
                 /*attributes*/ undefined,
@@ -286,6 +287,7 @@ export function transformECMAScriptModule(context: TransformationContext): (x: S
                 factory.createNamespaceImport(
                     synthName,
                 ),
+                /*phase*/ undefined,
             ),
             node.moduleSpecifier,
             node.attributes,

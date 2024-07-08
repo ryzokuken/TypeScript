@@ -9957,6 +9957,7 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
                                             propertyName && isIdentifier(propertyName) ? factory.createIdentifier(idText(propertyName)) : undefined,
                                             factory.createIdentifier(localName),
                                         )]),
+                                        /*phase*/ undefined,
                                     ),
                                     factory.createStringLiteral(specifier),
                                     /*attributes*/ undefined,
@@ -10043,7 +10044,7 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
                         addResult(
                             factory.createImportDeclaration(
                                 /*modifiers*/ undefined,
-                                factory.createImportClause(isTypeOnly, factory.createIdentifier(localName), /*namedBindings*/ undefined),
+                                factory.createImportClause(isTypeOnly, factory.createIdentifier(localName), /*namedBindings*/ undefined, /*phase*/ undefined),
                                 specifier,
                                 attributes,
                             ),
@@ -10058,7 +10059,7 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
                         addResult(
                             factory.createImportDeclaration(
                                 /*modifiers*/ undefined,
-                                factory.createImportClause(isTypeOnly, /*name*/ undefined, factory.createNamespaceImport(factory.createIdentifier(localName))),
+                                factory.createImportClause(isTypeOnly, /*name*/ undefined, factory.createNamespaceImport(factory.createIdentifier(localName)), /*phase*/ undefined),
                                 specifier,
                                 (node as ImportClause).parent.attributes,
                             ),
@@ -10094,6 +10095,7 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
                                             factory.createIdentifier(localName),
                                         ),
                                     ]),
+                                    /*phase*/ undefined,
                                 ),
                                 specifier,
                                 (node as ImportSpecifier).parent.parent.parent.attributes,

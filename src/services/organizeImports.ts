@@ -640,7 +640,7 @@ function updateImportDeclarationAndClause(
     return factory.updateImportDeclaration(
         importDeclaration,
         importDeclaration.modifiers,
-        factory.updateImportClause(importDeclaration.importClause!, importDeclaration.importClause!.isTypeOnly, name, namedBindings), // TODO: GH#18217
+        factory.updateImportClause(importDeclaration.importClause!, importDeclaration.importClause!.isTypeOnly, name, namedBindings, importDeclaration.importClause!.phase), // TODO: GH#18217
         importDeclaration.moduleSpecifier,
         importDeclaration.attributes,
     );

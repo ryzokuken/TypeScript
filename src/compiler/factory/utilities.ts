@@ -726,7 +726,7 @@ export function createExternalHelpersImportDeclarationIfNeeded(nodeFactory: Node
         if (namedBindings) {
             const externalHelpersImportDeclaration = nodeFactory.createImportDeclaration(
                 /*modifiers*/ undefined,
-                nodeFactory.createImportClause(/*isTypeOnly*/ false, /*name*/ undefined, namedBindings),
+                nodeFactory.createImportClause(/*isTypeOnly*/ false, /*name*/ undefined, namedBindings, /*phase*/ undefined),
                 nodeFactory.createStringLiteral(externalHelpersModuleNameText),
                 /*attributes*/ undefined,
             );
