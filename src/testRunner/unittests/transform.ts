@@ -345,7 +345,7 @@ describe("unittests:: TransformAPI", () => {
                         /*isTypeOnly*/ false,
                         /*name*/ undefined,
                         ts.factory.createNamespaceImport(ts.factory.createIdentifier("i0")),
-                        /*phase*/ undefined,
+                        ts.ImportPhase.Evaluation,
                     ),
                     /*moduleSpecifier*/ ts.factory.createStringLiteral("./comp1"),
                     /*attributes*/ undefined,

@@ -122,7 +122,7 @@ import {
     ImportDeclaration,
     ImportEqualsDeclaration,
     ImportOrExportSpecifier,
-    ImportPhaseSyntaxKind,
+    ImportPhase,
     ImportSpecifier,
     ImportTypeAssertionContainer,
     ImportTypeNode,
@@ -8349,7 +8349,7 @@ namespace Parser {
         }
 
         let isTypeOnly = false;
-        let phase: ImportPhaseSyntaxKind | undefined;
+        let phase = ImportPhase.Evaluation;
         if (
             identifier?.escapedText === "type" &&
             (token() !== SyntaxKind.FromKeyword || isIdentifier() && lookAhead(nextTokenIsFromKeywordOrEqualsToken)) &&
@@ -8357,16 +8357,20 @@ namespace Parser {
         ) {
             isTypeOnly = true;
             identifier = isIdentifier() ? parseIdentifier() : undefined;
-        } else if (identifier?.escapedText === "defer" && token() !== SyntaxKind.FromKeyword) { // `import defer` except `import defer from`
-            phase = SyntaxKind.DeferKeyword;
-            identifier = isIdentifier() ? parseIdentifier() : undefined;
+        } else if (identifier?.escapedText === "defer" && token() !== SyntaxKind.FromKeyword) {
+            phase = ImportPhase.Defer;
+            identifier = undefined;
+            if (isIdentifier()) {
+                parseErrorAtCurrentToken(Diagnostics.Default_imports_aren_t_allowed_for_deferred_imports);
+                identifier = parseIdentifier();
+            }
         }
 
-        if (identifier && !tokenAfterImportedIdentifierDefinitelyProducesImportDeclaration() && phase !== SyntaxKind.DeferKeyword) {
+        if (identifier && !tokenAfterImportedIdentifierDefinitelyProducesImportDeclaration() && phase !== ImportPhase.Defer) {
             return parseImportEqualsDeclaration(pos, hasJSDoc, modifiers, identifier, isTypeOnly);
         }
 
-        const importClause = tryParseImportClause(identifier, afterImportPos, isTypeOnly, undefined, phase);
+        const importClause = tryParseImportClause(identifier, afterImportPos, isTypeOnly, /*skipJsDocLeadingAsterisks*/ undefined, phase);
         const moduleSpecifier = parseModuleSpecifier();
         const attributes = tryParseImportAttributes();
 
@@ -8375,7 +8379,7 @@ namespace Parser {
         return withJSDoc(finishNode(node, pos), hasJSDoc);
     }
 
-    function tryParseImportClause(identifier: Identifier | undefined, pos: number, isTypeOnly: boolean, skipJsDocLeadingAsterisks = false, phase?: ImportPhaseSyntaxKind) {
+    function tryParseImportClause(identifier: Identifier | undefined, pos: number, isTypeOnly: boolean, skipJsDocLeadingAsterisks = false, phase: ImportPhase) {
         // ImportDeclaration:
         //  import ImportClause from ModuleSpecifier ;
         //  import ModuleSpecifier;
@@ -8451,7 +8455,7 @@ namespace Parser {
         return finished;
     }
 
-    function parseImportClause(identifier: Identifier | undefined, pos: number, isTypeOnly: boolean, skipJsDocLeadingAsterisks: boolean, phase?: ImportPhaseSyntaxKind) {
+    function parseImportClause(identifier: Identifier | undefined, pos: number, isTypeOnly: boolean, skipJsDocLeadingAsterisks: boolean, phase: ImportPhase) {
         // ImportClause:
         //  ImportedDefaultBinding
         //  NameSpaceImport
@@ -8467,7 +8471,14 @@ namespace Parser {
             parseOptional(SyntaxKind.CommaToken)
         ) {
             if (skipJsDocLeadingAsterisks) scanner.setSkipJsDocLeadingAsterisks(true);
-            namedBindings = token() === SyntaxKind.AsteriskToken ? parseNamespaceImport() : parseNamedImportsOrExports(SyntaxKind.NamedImports);
+            if (token() === SyntaxKind.AsteriskToken) {
+                namedBindings = parseNamespaceImport();
+            } else {
+                if (phase === ImportPhase.Defer) {
+                    parseErrorAtCurrentToken(Diagnostics.Destructuring_deferred_imports_isn_t_allowed);
+                }
+                namedBindings = parseNamedImportsOrExports(SyntaxKind.NamedImports);
+            }
             if (skipJsDocLeadingAsterisks) scanner.setSkipJsDocLeadingAsterisks(false);
         }
 
@@ -9505,7 +9516,7 @@ namespace Parser {
                     identifier = parseIdentifier();
                 }
 
-                const importClause = tryParseImportClause(identifier, afterImportTagPos, /*isTypeOnly*/ true, /*skipJsDocLeadingAsterisks*/ true);
+                const importClause = tryParseImportClause(identifier, afterImportTagPos, /*isTypeOnly*/ true, /*skipJsDocLeadingAsterisks*/ true, ImportPhase.Evaluation);
                 const moduleSpecifier = parseModuleSpecifier();
                 const attributes = tryParseImportAttributes();
 

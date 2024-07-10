@@ -776,9 +776,6 @@ export type JSDocSyntaxKind =
     | SyntaxKind.Unknown
     | KeywordSyntaxKind;
 
-export type ImportPhaseSyntaxKind =
-    | SyntaxKind.DeferKeyword;
-
 // dprint-ignore
 export const enum NodeFlags {
     None               = 0,
@@ -3684,7 +3681,7 @@ export interface ImportClause extends NamedDeclaration {
     readonly isTypeOnly: boolean;
     readonly name?: Identifier; // Default binding
     readonly namedBindings?: NamedImportBindings;
-    readonly phase?: ImportPhaseSyntaxKind;
+    readonly phase: ImportPhase;
 }
 
 /** @deprecated */
@@ -8839,8 +8836,8 @@ export interface NodeFactory {
     updateImportEqualsDeclaration(node: ImportEqualsDeclaration, modifiers: readonly ModifierLike[] | undefined, isTypeOnly: boolean, name: Identifier, moduleReference: ModuleReference): ImportEqualsDeclaration;
     createImportDeclaration(modifiers: readonly ModifierLike[] | undefined, importClause: ImportClause | undefined, moduleSpecifier: Expression, attributes?: ImportAttributes): ImportDeclaration;
     updateImportDeclaration(node: ImportDeclaration, modifiers: readonly ModifierLike[] | undefined, importClause: ImportClause | undefined, moduleSpecifier: Expression, attributes: ImportAttributes | undefined): ImportDeclaration;
-    createImportClause(isTypeOnly: boolean, name: Identifier | undefined, namedBindings: NamedImportBindings | undefined, phase: ImportPhaseSyntaxKind | undefined): ImportClause;
-    updateImportClause(node: ImportClause, isTypeOnly: boolean, name: Identifier | undefined, namedBindings: NamedImportBindings | undefined, phase: ImportPhaseSyntaxKind | undefined): ImportClause;
+    createImportClause(isTypeOnly: boolean, name: Identifier | undefined, namedBindings: NamedImportBindings | undefined, phase: ImportPhase): ImportClause;
+    updateImportClause(node: ImportClause, isTypeOnly: boolean, name: Identifier | undefined, namedBindings: NamedImportBindings | undefined, phase: ImportPhase): ImportClause;
     /** @deprecated */ createAssertClause(elements: NodeArray<AssertEntry>, multiLine?: boolean): AssertClause;
     /** @deprecated */ updateAssertClause(node: AssertClause, elements: NodeArray<AssertEntry>, multiLine?: boolean): AssertClause;
     /** @deprecated */ createAssertEntry(name: AssertionKey, value: Expression): AssertEntry;
@@ -10272,4 +10269,10 @@ export interface SyntacticTypeNodeBuilderResolver {
     isEntityNameVisible(entityName: EntityNameOrEntityNameExpression, enclosingDeclaration: Node, shouldComputeAliasToMakeVisible?: boolean): SymbolVisibilityResult;
     requiresAddingImplicitUndefined(parameter: ParameterDeclaration | JSDocParameterTag): boolean;
     isDefinitelyReferenceToGlobalSymbolObject(node: Node): boolean;
+}
+
+/** @internal */
+export const enum ImportPhase {
+    Evaluation,
+    Defer,
 }

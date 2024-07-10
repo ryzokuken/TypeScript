@@ -12,6 +12,7 @@ import {
     getAllowSyntheticDefaultImports,
     getTokenAtPosition,
     Identifier,
+    ImportPhase,
     ImportSpecifier,
     isIdentifier,
     isObjectBindingPattern,
@@ -57,7 +58,7 @@ function doChange(changes: textChanges.ChangeTracker, sourceFile: SourceFile, in
         statement,
         defaultImportName && !allowSyntheticDefaults
             ? factory.createImportEqualsDeclaration(/*modifiers*/ undefined, /*isTypeOnly*/ false, defaultImportName, factory.createExternalModuleReference(required))
-            : factory.createImportDeclaration(/*modifiers*/ undefined, factory.createImportClause(/*isTypeOnly*/ false, defaultImportName, namedImports, undefined), required, /*attributes*/ undefined),
+            : factory.createImportDeclaration(/*modifiers*/ undefined, factory.createImportClause(/*isTypeOnly*/ false, defaultImportName, namedImports, ImportPhase.Evaluation), required, /*attributes*/ undefined),
     );
 }
 

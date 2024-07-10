@@ -135,7 +135,7 @@ import {
     ImportClause,
     ImportDeclaration,
     ImportEqualsDeclaration,
-    ImportPhaseSyntaxKind,
+    ImportPhase,
     ImportSpecifier,
     ImportTypeAssertionContainer,
     ImportTypeNode,
@@ -4716,7 +4716,7 @@ export function createNodeFactory(flags: NodeFactoryFlags, baseFactory: BaseNode
     }
 
     // @api
-    function createImportClause(isTypeOnly: boolean, name: Identifier | undefined, namedBindings: NamedImportBindings | undefined, phase: ImportPhaseSyntaxKind | undefined): ImportClause {
+    function createImportClause(isTypeOnly: boolean, name: Identifier | undefined, namedBindings: NamedImportBindings | undefined, phase: ImportPhase): ImportClause {
         const node = createBaseDeclaration<ImportClause>(SyntaxKind.ImportClause);
         node.isTypeOnly = isTypeOnly;
         node.name = name;
@@ -4732,7 +4732,7 @@ export function createNodeFactory(flags: NodeFactoryFlags, baseFactory: BaseNode
     }
 
     // @api
-    function updateImportClause(node: ImportClause, isTypeOnly: boolean, name: Identifier | undefined, namedBindings: NamedImportBindings | undefined, phase: ImportPhaseSyntaxKind | undefined) {
+    function updateImportClause(node: ImportClause, isTypeOnly: boolean, name: Identifier | undefined, namedBindings: NamedImportBindings | undefined, phase: ImportPhase) {
         return node.isTypeOnly !== isTypeOnly
                 || node.name !== name
                 || node.namedBindings !== namedBindings

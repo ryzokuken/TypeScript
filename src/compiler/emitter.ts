@@ -421,6 +421,7 @@ import {
     writeFile,
     WriteFileCallbackData,
     YieldExpression,
+    ImportPhase,
 } from "./_namespaces/ts.js";
 import * as performance from "./_namespaces/ts.performance.js";
 
@@ -3605,8 +3606,8 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
         if (node.isTypeOnly) {
             emitTokenWithComment(SyntaxKind.TypeKeyword, node.pos, writeKeyword, node);
             writeSpace();
-        } else if (node.phase) {
-            emitTokenWithComment(node.phase, node.pos, writeKeyword, node);
+        } else if (node.phase !== ImportPhase.Evaluation) {
+            emitTokenWithComment(SyntaxKind.DeferKeyword, node.pos, writeKeyword, node);
             writeSpace();
         }
         emit(node.name);
