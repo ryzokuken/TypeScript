@@ -1,6 +1,6 @@
 // @module: esnext
 // @filename: a.ts
-export function defer() {
+export default function defer() {
     console.log("defer from a");
 }
 
