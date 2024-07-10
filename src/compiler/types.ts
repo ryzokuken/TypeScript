@@ -10271,7 +10271,6 @@ export interface SyntacticTypeNodeBuilderResolver {
     isDefinitelyReferenceToGlobalSymbolObject(node: Node): boolean;
 }
 
-/** @internal */
 export const enum ImportPhase {
     Evaluation,
     Defer,
