@@ -8475,7 +8475,7 @@ namespace Parser {
                 namedBindings = parseNamespaceImport();
             } else {
                 if (phase === ImportPhase.Defer) {
-                    parseErrorAtCurrentToken(Diagnostics.Destructuring_deferred_imports_isn_t_allowed);
+                    parseErrorAtCurrentToken(Diagnostics.Named_imports_aren_t_allowed_for_deferred_imports);
                 }
                 namedBindings = parseNamedImportsOrExports(SyntaxKind.NamedImports);
             }

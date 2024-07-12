@@ -8322,7 +8322,7 @@
         "category": "Error",
         "code": 18058
     },
-    "Destructuring deferred imports isn't allowed.": {
+    "Named imports aren't allowed for deferred imports.": {
         "category": "Error",
         "code": 18059
     },
