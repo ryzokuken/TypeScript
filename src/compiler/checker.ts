@@ -51902,6 +51902,9 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
         if (node.isTypeOnly && node.namedBindings?.kind === SyntaxKind.NamedImports) {
             return checkGrammarNamedImportsOrExports(node.namedBindings);
         }
+        if (node.phase !== ImportPhase.Evaluation && moduleKind !== ModuleKind.ESNext) {
+            return grammarErrorOnNode(node, Diagnostics.Deferred_imports_are_only_allowed_when_the_module_flag_is_set_to_esnext);
+        }
         return false;
     }
 

@@ -8325,5 +8325,9 @@
     "Destructuring deferred imports isn't allowed.": {
         "category": "Error",
         "code": 18059
+    },
+    "Deferred imports are only allowed when the '--module' flag is set to 'esnext'.": {
+        "category": "Error",
+        "code": 18060
     }
 }
